@@ -56,7 +56,7 @@ $PWD/.gem/bin/juicer install jslint | indent
 echo "       done."
 
 echo "-----> Merging JavaScript..."
-for f in $(find ${BUILD_DIR}/${JS_PATH} -type f -maxdepth 0 -name "*.js"); do
+for f in $(find ${BUILD_DIR}/${JS_PATH} -type f -maxdepth 1 -name "*.js" ! -name "*.min.js"); do
 	$PWD/.gem/bin/juicer merge "$f" -f -s | indent
 done
 echo "       done."
@@ -72,7 +72,7 @@ $NODE_BUILDPACK_DIR/bin/compile $NODE_BUILD_DIR $CACHE_DIR
 export PATH=$PATH:$NODE_BUILD_DIR/bin:$NODE_BUILD_DIR/node_modules/.bin
 
 echo "-----> Blessing CSS"
-for f in $(find ${BUILD_DIR}/${CSS_PATH} -type f -maxdepth 0 -name "*.css"); do
+for f in $(find ${BUILD_DIR}/${CSS_PATH} -type f -maxdepth 1 -name "*.css"); do
 	blessc "$f" "${$f%.*}.split.css" | indent
 done
 echo "       done."
