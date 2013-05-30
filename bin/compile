@@ -53,9 +53,8 @@ echo "       done."
 
 echo "-----> Merging JavaScript..."
 $PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/application.js -f -s
-echo "       done merging application.min.js."
 $PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/runway.js -f -s
-echo "       done merging runway.min.js."
+echo "       done."
 
 # Node Installation
 
@@ -69,9 +68,8 @@ export PATH=$PATH:$NODE_BUILD_DIR/bin:$NODE_BUILD_DIR/node_modules/.bin
 
 echo "-----> Blessing CSS"
 blessc $BUILD_DIR/ui/design/css/screen.css $BUILD_DIR/ui/design/css/screen.blessed.css
-echo "       done blessing screen.css."
 blessc $BUILD_DIR/ui/design/css/screen-no-mq.css $BUILD_DIR/ui/design/css/screen.blessed-no-mq.css
-echo "       done blessing screen-no-mq.css."
+echo "       done."
 
 # COMPILE APP
 # Original code from: https://github.com/heroku/heroku-buildpack-php
