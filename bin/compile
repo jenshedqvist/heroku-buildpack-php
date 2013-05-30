@@ -56,8 +56,8 @@ echo "-----> Installing JSLint"
 $PWD/.gem/bin/juicer install jslint
 
 echo "-----> Compiling JavaScript..."
-$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/application.js -f
-$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/runway.js -f
+$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/application.js -f -s
+$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/runway.js -f -s
 echo "       done."
 
 # echo -n "-----> Fetching YUI Compressor 2.4.7..."
