@@ -15,10 +15,11 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 LP_DIR=`cd $(dirname $0); cd ..; pwd`
 
-# COMPILE ASSETS
+# INSTALL LIBRARIES AND COMPILE ASSETS
 # Code borrowed from: https://github.com/abhishekmunie/heroku-buildpack-static-css
+# --------------------------------------------------------------------------------
 
-# css compilation ----------------------------
+# CSS Compilation
 
 echo "-----> Installing SASS..."
 if [ ! -d "$PWD/.gem" ]; then
@@ -31,6 +32,8 @@ echo "       done."
 echo "-----> Compiling SASS..."
 $PWD/.gem/bin/sass --update $BUILD_DIR/ui/design/scss:$BUILD_DIR/ui/design/css
 echo "       done."
+
+# JavaScript Compilation
 
 echo "-----> Installing Juicer..."
 if [ ! -d "$PWD/.gem" ]; then
@@ -54,15 +57,15 @@ echo "       done merging application.min.js."
 $PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/runway.js -f -s
 echo "       done merging runway.min.js."
 
-# Node Installation --------------------------
+# Node Installation
 
-# NODE_BUILDPACK_DIR=$(mktemp -d -t node.XXXXXX)
-# NODE_BUILD_DIR=$(mktemp -d -t node_build.XXXXXX)
-# git clone --quiet https://github.com/heroku/heroku-buildpack-nodejs.git $NODE_BUILDPACK_DIR
-# mv $LP_DIR/vendor/package-bless.json $NODE_BUILD_DIR/package.json
-# $NODE_BUILDPACK_DIR/bin/compile $NODE_BUILD_DIR $CACHE_DIR
+NODE_BUILDPACK_DIR=$(mktemp -d -t node.XXXXXX)
+NODE_BUILD_DIR=$(mktemp -d -t node_build.XXXXXX)
+git clone --quiet https://github.com/heroku/heroku-buildpack-nodejs.git $NODE_BUILDPACK_DIR
+mv $LP_DIR/vendor/package-bless.json $NODE_BUILD_DIR/package.json
+$NODE_BUILDPACK_DIR/bin/compile $NODE_BUILD_DIR $CACHE_DIR
 
-# export PATH=$PATH:$NODE_BUILD_DIR/bin:$NODE_BUILD_DIR/node_modules/.bin
+export PATH=$PATH:$NODE_BUILD_DIR/bin:$NODE_BUILD_DIR/node_modules/.bin
 
 # COMPILE APP
 # Original code from: https://github.com/heroku/heroku-buildpack-php
