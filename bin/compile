@@ -6,17 +6,19 @@ set -e
 
 # Node Installation --------------------------
 
-NODE_BUILDPACK_DIR=$(mktemp -d -t node.XXXXXX)
-NODE_BUILD_DIR=$(mktemp -d -t node_build.XXXXXX)
-git clone --quiet https://github.com/heroku/heroku-buildpack-nodejs.git $NODE_BUILDPACK_DIR
-mv $LP_DIR/vendor/package-bless.json $NODE_BUILD_DIR/package.json
-$NODE_BUILDPACK_DIR/bin/compile $NODE_BUILD_DIR $CACHE_DIR
+# NODE_BUILDPACK_DIR=$(mktemp -d -t node.XXXXXX)
+# NODE_BUILD_DIR=$(mktemp -d -t node_build.XXXXXX)
+# git clone --quiet https://github.com/heroku/heroku-buildpack-nodejs.git $NODE_BUILDPACK_DIR
+# mv $LP_DIR/vendor/package-bless.json $NODE_BUILD_DIR/package.json
+# $NODE_BUILDPACK_DIR/bin/compile $NODE_BUILD_DIR $CACHE_DIR
 
-export PATH=$PATH:$NODE_BUILD_DIR/bin:$NODE_BUILD_DIR/node_modules/.bin
+# export PATH=$PATH:$NODE_BUILD_DIR/bin:$NODE_BUILD_DIR/node_modules/.bin
 
 # css compilation ----------------------------
 
 BUILD_DIR=$1
+
+echo $BUILD_DIR
 
 echo "-----> Installing SASS..."
 if [ ! -d "$PWD/.gem" ]; then
