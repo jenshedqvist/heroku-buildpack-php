@@ -4,6 +4,10 @@
 # fail fast
 set -e
 
+indent() {
+  sed -u 's/^/       /'
+}
+
 # config
 APACHE_VERSION="2.2.22"
 APACHE_PATH="apache"
@@ -25,12 +29,12 @@ echo "-----> Installing SASS..."
 if [ ! -d "$PWD/.gem" ]; then
   mkdir $PWD/.gem
 fi
-gem install sass --no-rdoc --no-ri --install-dir "$PWD/.gem"
+gem install sass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
 export GEM_PATH=$GEM_PATH:$PWD/.gem
 echo "       done."
 
 echo "-----> Compiling SASS..."
-$PWD/.gem/bin/sass --update $BUILD_DIR/ui/design/scss:$BUILD_DIR/ui/design/css
+$PWD/.gem/bin/sass --update $BUILD_DIR/$SASS_PATH:$BUILD_DIR/$CSS_PATH | indent
 echo "       done."
 
 # JavaScript Compilation
@@ -39,21 +43,23 @@ echo "-----> Installing Juicer..."
 if [ ! -d "$PWD/.gem" ]; then
   mkdir $PWD/.gem
 fi
-gem install juicer --no-rdoc --no-ri --install-dir "$PWD/.gem"
+gem install juicer --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
 export GEM_PATH=$GEM_PATH:$PWD/.gem
 echo "       done."
 
 echo "-----> Installing YUI Compressor"
-$PWD/.gem/bin/juicer install yui_compressor
+$PWD/.gem/bin/juicer install yui_compressor | indent
 echo "       done."
 
 echo "-----> Installing JSLint"
-$PWD/.gem/bin/juicer install jslint
+$PWD/.gem/bin/juicer install jslint | indent
 echo "       done."
 
 echo "-----> Merging JavaScript..."
-$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/application.js -f -s
-$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/runway.js -f -s
+for f in $BUILD_DIR/$JS_PATH/*.js
+do
+	$PWD/.gem/bin/juicer merge $BUILD_DIR/$JS_PATH/$f -f -s | indent
+done
 echo "       done."
 
 # Node Installation
@@ -61,14 +67,18 @@ echo "       done."
 NODE_BUILDPACK_DIR=$(mktemp -d -t node.XXXXXX)
 NODE_BUILD_DIR=$(mktemp -d -t node_build.XXXXXX)
 git clone --quiet https://github.com/heroku/heroku-buildpack-nodejs.git $NODE_BUILDPACK_DIR
-mv $LP_DIR/vendor/package-bless.json $NODE_BUILD_DIR/package.json
+mv $LP_DIR/vendor/package.json $NODE_BUILD_DIR/package.json
 $NODE_BUILDPACK_DIR/bin/compile $NODE_BUILD_DIR $CACHE_DIR
 
 export PATH=$PATH:$NODE_BUILD_DIR/bin:$NODE_BUILD_DIR/node_modules/.bin
 
 echo "-----> Blessing CSS"
-blessc $BUILD_DIR/ui/design/css/screen.css $BUILD_DIR/ui/design/css/screen.split.css
-blessc $BUILD_DIR/ui/design/css/screen-no-mq.css $BUILD_DIR/ui/design/css/screen.split-no-mq.css
+for f in $BUILD_DIR/$CSS_PATH/*.css
+do
+	FILE = ${x%.css}
+	FILE = ${$FILE##*/}
+	blessc $BUILD_DIR/$CSS_PATH/$FILE.css $BUILD_DIR/$CSS_PATH/$FILE.split.css | indent
+done
 echo "       done."
 
 # COMPILE APP
