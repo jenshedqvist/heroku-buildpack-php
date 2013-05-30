@@ -58,6 +58,7 @@ echo "       done."
 echo "-----> Merging JavaScript..."
 for f in $BUILD_DIR$JS_PATH/*.js
 do
+	echo $f
 	$PWD/.gem/bin/juicer merge $BUILD_DIR$JS_PATH/$f -f -s | indent
 done
 echo "       done."
