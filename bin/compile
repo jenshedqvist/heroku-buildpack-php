@@ -18,16 +18,6 @@ LP_DIR=`cd $(dirname $0); cd ..; pwd`
 # COMPILE ASSETS
 # Code borrowed from: https://github.com/abhishekmunie/heroku-buildpack-static-css
 
-# Node Installation --------------------------
-
-# NODE_BUILDPACK_DIR=$(mktemp -d -t node.XXXXXX)
-# NODE_BUILD_DIR=$(mktemp -d -t node_build.XXXXXX)
-# git clone --quiet https://github.com/heroku/heroku-buildpack-nodejs.git $NODE_BUILDPACK_DIR
-# mv $LP_DIR/vendor/package-bless.json $NODE_BUILD_DIR/package.json
-# $NODE_BUILDPACK_DIR/bin/compile $NODE_BUILD_DIR $CACHE_DIR
-
-# export PATH=$PATH:$NODE_BUILD_DIR/bin:$NODE_BUILD_DIR/node_modules/.bin
-
 # css compilation ----------------------------
 
 echo "-----> Installing SASS..."
@@ -48,21 +38,31 @@ if [ ! -d "$PWD/.gem" ]; then
 fi
 gem install juicer --no-rdoc --no-ri --install-dir "$PWD/.gem"
 export GEM_PATH=$GEM_PATH:$PWD/.gem
+echo "       done."
 
 echo "-----> Installing YUI Compressor"
 $PWD/.gem/bin/juicer install yui_compressor
+echo "       done."
 
 echo "-----> Installing JSLint"
 $PWD/.gem/bin/juicer install jslint
-
-echo "-----> Compiling JavaScript..."
-$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/application.js -f -s
-$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/runway.js -f -s
 echo "       done."
 
-# echo -n "-----> Fetching YUI Compressor 2.4.7..."
-# curl --silent --location http://cloud.github.com/downloads/abhishekmunie/heroku-buildpack-static-css/yuicompressor-2.4.7.jar.tar.gz | tar xz
-# echo "done"
+echo "-----> Merging JavaScript..."
+$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/application.js -f -s
+echo "       done merging application.min.js."
+$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/runway.js -f -s
+echo "       done merging runway.min.js."
+
+# Node Installation --------------------------
+
+# NODE_BUILDPACK_DIR=$(mktemp -d -t node.XXXXXX)
+# NODE_BUILD_DIR=$(mktemp -d -t node_build.XXXXXX)
+# git clone --quiet https://github.com/heroku/heroku-buildpack-nodejs.git $NODE_BUILDPACK_DIR
+# mv $LP_DIR/vendor/package-bless.json $NODE_BUILD_DIR/package.json
+# $NODE_BUILDPACK_DIR/bin/compile $NODE_BUILD_DIR $CACHE_DIR
+
+# export PATH=$PATH:$NODE_BUILD_DIR/bin:$NODE_BUILD_DIR/node_modules/.bin
 
 # COMPILE APP
 # Original code from: https://github.com/heroku/heroku-buildpack-php

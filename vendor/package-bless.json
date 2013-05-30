@@ -6,6 +6,6 @@
     "npm": "1.1.49"
   },
   "dependencies": {
-    "bless"   : "latest"
+    "bless": "latest"
   }
 }
