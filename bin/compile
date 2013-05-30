@@ -25,6 +25,8 @@ LP_DIR=`cd $(dirname $0); cd ..; pwd`
 
 # CSS Compilation
 
+echo "Depends on lab feature to make Heroku config vars availible during build: https://devcenter.heroku.com/articles/labs-user-env-compile"
+
 echo "-----> Installing SASS..."
 if [ ! -d "$PWD/.gem" ]; then
   mkdir $PWD/.gem
