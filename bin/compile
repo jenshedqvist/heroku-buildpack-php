@@ -4,6 +4,36 @@
 # fail fast
 set -e
 
+# Node Installation --------------------------
+
+NODE_BUILDPACK_DIR=$(mktemp -d -t node.XXXXXX)
+NODE_BUILD_DIR=$(mktemp -d -t node_build.XXXXXX)
+git clone --quiet https://github.com/heroku/heroku-buildpack-nodejs.git $NODE_BUILDPACK_DIR
+mv $LP_DIR/vendor/package-less.json $NODE_BUILD_DIR/package.json
+$NODE_BUILDPACK_DIR/bin/compile $NODE_BUILD_DIR $CACHE_DIR
+
+export PATH=$PATH:$NODE_BUILD_DIR/bin:$NODE_BUILD_DIR/node_modules/.bin
+
+# css compilation ----------------------------
+
+BUILD_DIR=$1
+
+echo "-----> Installing SASS..."
+if [ ! -d "$PWD/.gem" ]; then
+  mkdir $PWD/.gem
+fi
+gem install sass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
+export GEM_PATH=$GEM_PATH:$PWD/.gem
+echo "       done."
+
+echo "-----> Compiling SASS..."
+$PWD/.gem/bin/sass --update $BUILD_DIR:$BUILD_DIR | indent
+echo "       done."
+
+# echo -n "-----> Fetching YUI Compressor 2.4.7..."
+# curl --silent --location http://cloud.github.com/downloads/abhishekmunie/heroku-buildpack-static-css/yuicompressor-2.4.7.jar.tar.gz | tar xz
+# echo "done"
+
 # config
 APACHE_VERSION="2.2.22"
 APACHE_PATH="apache"
