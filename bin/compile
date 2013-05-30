@@ -34,7 +34,7 @@ export GEM_PATH=$GEM_PATH:$PWD/.gem
 echo "       done."
 
 echo "-----> Compiling SASS..."
-$PWD/.gem/bin/sass --update $BUILD_DIR$SASS_PATH:$BUILD_DIR$CSS_PATH | indent
+$PWD/.gem/bin/sass --update ${BUILD_DIR}${SASS_PATH}:${BUILD_DIR}${CSS_PATH} | indent
 echo "       done."
 
 # JavaScript Compilation
@@ -56,9 +56,9 @@ $PWD/.gem/bin/juicer install jslint | indent
 echo "       done."
 
 echo "-----> Merging JavaScript..."
-for f in 'find $BUILD_DIR$JS_PATH -type f'; do
+for f in $(find ${BUILD_DIR}${JS_PATH} -type f -maxdepth 1 -name "*.js"); do
 	echo "$f"
-	# $PWD/.gem/bin/juicer merge $BUILD_DIR$JS_PATH/$f -f -s | indent
+	$PWD/.gem/bin/juicer merge ${BUILD_DIR}${JS_PATH}/$f -f -s | indent
 done
 echo "       done."
 
