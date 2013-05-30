@@ -57,6 +57,8 @@ echo "       done."
 
 echo "-----> Merging JavaScript..."
 for f in $(find ${BUILD_DIR}/${JS_PATH} -type f -maxdepth 1 -name "*.js"); do
+	echo "$f"
+	echo "${BUILD_DIR}/${JS_PATH}/$f"
 	$PWD/.gem/bin/juicer merge "${BUILD_DIR}/${JS_PATH}/$f" -f -s | indent
 done
 echo "       done."
