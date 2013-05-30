@@ -30,31 +30,31 @@ LP_DIR=`cd $(dirname $0); cd ..; pwd`
 
 # css compilation ----------------------------
 
-echo "-----> Installing SASS..."
+echo "-----> Installing SASS..." | indent
 if [ ! -d "$PWD/.gem" ]; then
   mkdir $PWD/.gem
 fi
-gem install sass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
+gem install sass --no-rdoc --no-ri --install-dir "$PWD/.gem"
 export GEM_PATH=$GEM_PATH:$PWD/.gem
 echo "       done."
 
-echo "-----> Compiling SASS..."
-$PWD/.gem/bin/sass --update $BUILD_DIR/ui/design/scss:$BUILD_DIR/ui/design/css | indent
+echo "-----> Compiling SASS..." | indent
+$PWD/.gem/bin/sass --update $BUILD_DIR/ui/design/scss:$BUILD_DIR/ui/design/css
 echo "       done."
 
-echo "-----> Installing Juicer..."
+echo "-----> Installing Juicer..." | indent
 if [ ! -d "$PWD/.gem" ]; then
   mkdir $PWD/.gem
 fi
-gem install juicer --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
+gem install juicer --no-rdoc --no-ri --install-dir "$PWD/.gem"
 export GEM_PATH=$GEM_PATH:$PWD/.gem
 
-echo "-----> Installing YUI Compressor"
+echo "-----> Installing YUI Compressor" | indent
 $PWD/.gem/bin/juicer install yui_compressor
 
-echo "-----> Compiling JavaScript..."
-$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/application.js -f | indent
-$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/runway.js -f | indent
+echo "-----> Compiling JavaScript..." | indent
+$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/application.js -f
+$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/runway.js -f
 echo "       done."
 
 # echo -n "-----> Fetching YUI Compressor 2.4.7..."
