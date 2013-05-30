@@ -33,9 +33,18 @@ gem install sass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
 export GEM_PATH=$GEM_PATH:$PWD/.gem
 echo "       done."
 
-echo "-----> Compiling SASS..."
-$PWD/.gem/bin/sass --update "${BUILD_DIR}/${SASS_PATH}":"${BUILD_DIR}/${CSS_PATH}" --style compressed | indent
-echo "       done."
+if [ ! -f "$BUILD_DIR/config.rb" ]; then
+	echo "-----> Compiling SASS..."
+	$PWD/.gem/bin/sass --update "${BUILD_DIR}/${SASS_PATH}":"${BUILD_DIR}/${CSS_PATH}" --style compressed | indent
+	echo "       done."
+else
+	echo "-----> Installing Compass..."
+	gem install compass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
+	echo "       done."
+	echo "-----> Compiling Compass..."
+	$PWD/.gem/bin/compass compile ${BUILD_DIR} | indent
+	echo "       done."
+fi
 
 # JavaScript Compilation
 
