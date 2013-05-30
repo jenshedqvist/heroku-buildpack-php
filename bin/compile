@@ -35,7 +35,7 @@ gem install sass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
 export GEM_PATH=$GEM_PATH:$PWD/.gem
 echo "       done."
 
-if [ ! -f "$BUILD_DIR/config.rb" ]; then
+if [ ! -f "${BUILD_DIR}/config.rb" ]; then
 	echo "-----> Compiling SASS..."
 	$PWD/.gem/bin/sass --update "${BUILD_DIR}/${SASS_PATH}":"${BUILD_DIR}/${CSS_PATH}" --style compressed | indent
 	echo "       done."
