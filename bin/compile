@@ -25,13 +25,6 @@ LP_DIR=`cd $(dirname $0); cd ..; pwd`
 
 # CSS Compilation
 
-export SASS_PATH=lol
-
-echo ${BUILD_DIR}
-echo ${lol}
-echo ${CSS_PATH}
-echo ${JS_PATH}
-
 echo "-----> Installing SASS..."
 if [ ! -d "$PWD/.gem" ]; then
   mkdir $PWD/.gem
@@ -65,7 +58,6 @@ echo "       done."
 echo "-----> Merging JavaScript..."
 echo "${BUILD_DIR}${JS_PATH}"
 for f in $(find ${BUILD_DIR}${JS_PATH} -type f -maxdepth 1 -name "*.js"); do
-	echo "$f"
 	$PWD/.gem/bin/juicer merge ${BUILD_DIR}${JS_PATH}/$f -f -s | indent
 done
 echo "       done."
