@@ -67,8 +67,8 @@ $NODE_BUILDPACK_DIR/bin/compile $NODE_BUILD_DIR $CACHE_DIR
 export PATH=$PATH:$NODE_BUILD_DIR/bin:$NODE_BUILD_DIR/node_modules/.bin
 
 echo "-----> Blessing CSS"
-blessc $BUILD_DIR/ui/design/css/screen.css $BUILD_DIR/ui/design/css/screen.blessed.css
-blessc $BUILD_DIR/ui/design/css/screen-no-mq.css $BUILD_DIR/ui/design/css/screen.blessed-no-mq.css
+blessc $BUILD_DIR/ui/design/css/screen.css $BUILD_DIR/ui/design/css/screen.split.css
+blessc $BUILD_DIR/ui/design/css/screen-no-mq.css $BUILD_DIR/ui/design/css/screen.split-no-mq.css
 echo "       done."
 
 # COMPILE APP
