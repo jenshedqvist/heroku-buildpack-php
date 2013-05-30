@@ -25,6 +25,11 @@ LP_DIR=`cd $(dirname $0); cd ..; pwd`
 
 # CSS Compilation
 
+echo ${BUILD_DIR}
+echo ${SASS_PATH}
+echo ${CSS_PATH}
+echo ${JS_PATH}
+
 echo "-----> Installing SASS..."
 if [ ! -d "$PWD/.gem" ]; then
   mkdir $PWD/.gem
