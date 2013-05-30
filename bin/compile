@@ -4,6 +4,20 @@
 # fail fast
 set -e
 
+# config
+APACHE_VERSION="2.2.22"
+APACHE_PATH="apache"
+PHP_VERSION="5.3.10"
+PHP_PATH="php"
+
+BIN_DIR=$(dirname $0)
+BUILD_DIR=$1
+CACHE_DIR=$2
+LP_DIR=`cd $(dirname $0); cd ..; pwd`
+
+# COMPILE ASSETS
+# Code borrowed from: https://github.com/abhishekmunie/heroku-buildpack-static-css
+
 # Node Installation --------------------------
 
 # NODE_BUILDPACK_DIR=$(mktemp -d -t node.XXXXXX)
@@ -16,36 +30,39 @@ set -e
 
 # css compilation ----------------------------
 
-BUILD_DIR=$1
-
-echo $BUILD_DIR
-
 echo "-----> Installing SASS..."
 if [ ! -d "$PWD/.gem" ]; then
   mkdir $PWD/.gem
 fi
-gem install sass --no-rdoc --no-ri --install-dir "$PWD/.gem"
+gem install sass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
 export GEM_PATH=$GEM_PATH:$PWD/.gem
 echo "       done."
 
 echo "-----> Compiling SASS..."
-$PWD/.gem/bin/sass --update $BUILD_DIR/ui/design/scss:$BUILD_DIR/ui/design/css
+$PWD/.gem/bin/sass --update $BUILD_DIR/ui/design/scss:$BUILD_DIR/ui/design/css | indent
+echo "       done."
+
+echo "-----> Installing Juicer..."
+if [ ! -d "$PWD/.gem" ]; then
+  mkdir $PWD/.gem
+fi
+gem install juicer --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
+export GEM_PATH=$GEM_PATH:$PWD/.gem
+
+echo "-----> Installing YUI Compressor"
+$PWD/.gem/bin/juicer install yui_compressor
+
+echo "-----> Compiling JavaScript..."
+$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/application.js -f | indent
+$PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/runway.js -f | indent
 echo "       done."
 
 # echo -n "-----> Fetching YUI Compressor 2.4.7..."
 # curl --silent --location http://cloud.github.com/downloads/abhishekmunie/heroku-buildpack-static-css/yuicompressor-2.4.7.jar.tar.gz | tar xz
 # echo "done"
 
-# config
-APACHE_VERSION="2.2.22"
-APACHE_PATH="apache"
-PHP_VERSION="5.3.10"
-PHP_PATH="php"
-
-BIN_DIR=$(dirname $0)
-BUILD_DIR=$1
-CACHE_DIR=$2
-LP_DIR=`cd $(dirname $0); cd ..; pwd`
+# COMPILE APP
+# Original code from: https://github.com/heroku/heroku-buildpack-php
 
 # include .files when moving things around
 shopt -s dotglob
