@@ -52,6 +52,9 @@ export GEM_PATH=$GEM_PATH:$PWD/.gem
 echo "-----> Installing YUI Compressor"
 $PWD/.gem/bin/juicer install yui_compressor
 
+echo "-----> Installing JSLint"
+$PWD/.gem/bin/juicer install jslint
+
 echo "-----> Compiling JavaScript..."
 $PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/application.js -f
 $PWD/.gem/bin/juicer merge $BUILD_DIR/ui/javascripts/runway.js -f
