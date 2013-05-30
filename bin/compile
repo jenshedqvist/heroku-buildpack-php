@@ -29,7 +29,7 @@ export GEM_PATH=$GEM_PATH:$PWD/.gem
 echo "       done."
 
 echo "-----> Compiling SASS..."
-$PWD/.gem/bin/sass --update $BUILD_DIR:$BUILD_DIR
+$PWD/.gem/bin/sass --update $BUILD_DIR/ui/design/scss:$BUILD_DIR/ui/design/css
 echo "       done."
 
 # echo -n "-----> Fetching YUI Compressor 2.4.7..."
