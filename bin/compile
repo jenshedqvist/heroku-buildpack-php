@@ -34,7 +34,7 @@ export GEM_PATH=$GEM_PATH:$PWD/.gem
 echo "       done."
 
 echo "-----> Compiling SASS..."
-$PWD/.gem/bin/sass --update ${BUILD_DIR}${SASS_PATH}:${BUILD_DIR}${CSS_PATH} | indent
+$PWD/.gem/bin/sass --update "${BUILD_DIR}${SASS_PATH}":"${BUILD_DIR}${CSS_PATH}" | indent
 echo "       done."
 
 # JavaScript Compilation
