@@ -41,6 +41,7 @@ if [ -n ${SASS_PATH} ]; then
 
 	if [ ! -f "${BUILD_DIR}/config.rb" ]; then
 		echo "-----> Compiling SASS..."
+		echo "From: ${BUILD_DIR}/${SASS_PATH} TO: ${BUILD_DIR}/${CSS_PATH}"
 		$PWD/.gem/bin/sass --update "${BUILD_DIR}/${SASS_PATH}":"${BUILD_DIR}/${CSS_PATH}" --style compressed | indent
 		echo "done." | indent
 	else
