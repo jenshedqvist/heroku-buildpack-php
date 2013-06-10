@@ -34,19 +34,19 @@ if [ ! -d "$PWD/.gem" ]; then
 fi
 gem install sass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
 export GEM_PATH=$GEM_PATH:$PWD/.gem
-echo "       done."
+echo "done." | indent
 
 if [ ! -f "${BUILD_DIR}/config.rb" ]; then
 	echo "-----> Compiling SASS..."
 	$PWD/.gem/bin/sass --update "${BUILD_DIR}/${SASS_PATH}":"${BUILD_DIR}/${CSS_PATH}" --style compressed | indent
-	echo "       done."
+	echo "done." | indent
 else
 	echo "-----> Installing Compass..."
 	gem install compass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
-	echo "       done."
+	echo "done." | indent
 	echo "-----> Compiling Compass..."
 	$PWD/.gem/bin/compass compile ${BUILD_DIR} | indent
-	echo "       done."
+	echo "done." | indent
 fi
 
 # Node Installation
@@ -58,7 +58,7 @@ if [ -n "${SPLIT_FILES}" ]; then
 	git clone --quiet https://github.com/heroku/heroku-buildpack-nodejs.git $NODE_BUILDPACK_DIR
 	mv $LP_DIR/vendor/package.json $NODE_BUILD_DIR/package.json
 	$NODE_BUILDPACK_DIR/bin/compile $NODE_BUILD_DIR $CACHE_DIR
-	echo "       done."
+	echo "done." | indent
 
 	export PATH=$PATH:$NODE_BUILD_DIR/bin:$NODE_BUILD_DIR/node_modules/.bin
 
@@ -67,7 +67,7 @@ if [ -n "${SPLIT_FILES}" ]; then
 		NO_END=${f%.*}
 		blessc "${BUILD_DIR}/${CSS_PATH}/$f" "${BUILD_DIR}/${CSS_PATH}/${NO_END}.split.css" | indent
 	done
-	echo "       done."
+	echo "done." | indent
 fi
 
 # JavaScript Compilation
@@ -78,28 +78,30 @@ if [ ! -d "$PWD/.gem" ]; then
 fi
 gem install juicer --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
 export GEM_PATH=$GEM_PATH:$PWD/.gem
-echo "       done."
+echo "done." | indent
 
 echo "-----> Installing YUI Compressor"
 $PWD/.gem/bin/juicer install yui_compressor | indent
-echo "       done."
+echo "done." | indent
 
 echo "-----> Installing JSLint"
 $PWD/.gem/bin/juicer install jslint | indent
-echo "       done."
+echo "done." | indent
 
 echo "-----> Merging JavaScript..."
 for f in $(find ${BUILD_DIR}/${JS_PATH} -type f -maxdepth 1 -name "*.js" ! -name "*.min.js"); do
 	$PWD/.gem/bin/juicer merge "$f" -f -s | indent
 done
-echo "       done."
+echo "done." | indent
 
 echo "-----> Looking for costom buildpack"
 if [ -f ${BUILD_DIR}/bin/buildpack.rb ]; then
-	echo "Running found buildpack costom buildpack" | indent
+	echo "Running found buildpack" | indent
 	ruby ${BUILD_DIR}/bin/buildpack.rb
+	echo "done." | indent
+else
+	echo "no custom buildpack found, done." | indent
 fi
-echo "done." | indent
 
 # COMPILE APP
 # Original code from: https://github.com/heroku/heroku-buildpack-php
