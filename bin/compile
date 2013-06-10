@@ -23,35 +23,41 @@ LP_DIR=`cd $(dirname $0); cd ..; pwd`
 # Code borrowed from: https://github.com/abhishekmunie/heroku-buildpack-static-css
 # --------------------------------------------------------------------------------
 
-# CSS Compilation
 
 echo "       NOTICE: This deploy process depends on heroku lab feature making config vars availible during build."
 echo "       See: https://devcenter.heroku.com/articles/labs-user-env-compile"
 
-echo "-----> Installing SASS..."
-if [ ! -d "$PWD/.gem" ]; then
-  mkdir $PWD/.gem
-fi
-gem install sass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
-export GEM_PATH=$GEM_PATH:$PWD/.gem
-echo "done." | indent
+if [ -n ${SASS_PATH} ]; then
 
-if [ ! -f "${BUILD_DIR}/config.rb" ]; then
-	echo "-----> Compiling SASS..."
-	$PWD/.gem/bin/sass --update "${BUILD_DIR}/${SASS_PATH}":"${BUILD_DIR}/${CSS_PATH}" --style compressed | indent
+	# CSS Compilation
+
+	echo "-----> Installing SASS..."
+	if [ ! -d "$PWD/.gem" ]; then
+	  mkdir $PWD/.gem
+	fi
+	gem install sass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
+	export GEM_PATH=$GEM_PATH:$PWD/.gem
 	echo "done." | indent
-else
-	echo "-----> Installing Compass..."
-	gem install compass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
-	echo "done." | indent
-	echo "-----> Compiling Compass..."
-	$PWD/.gem/bin/compass compile ${BUILD_DIR} | indent
-	echo "done." | indent
+
+	if [ ! -f "${BUILD_DIR}/config.rb" ]; then
+		echo "-----> Compiling SASS..."
+		$PWD/.gem/bin/sass --update "${BUILD_DIR}/${SASS_PATH}":"${BUILD_DIR}/${CSS_PATH}" --style compressed | indent
+		echo "done." | indent
+	else
+		echo "-----> Installing Compass..."
+		gem install compass --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
+		echo "done." | indent
+		echo "-----> Compiling Compass..."
+		$PWD/.gem/bin/compass compile ${BUILD_DIR} | indent
+		echo "done." | indent
+	fi
+
 fi
 
 # Node Installation
 
 if [ -n "${SPLIT_FILES}" ]; then
+
 	echo "-----> Onstalling Node"
 	NODE_BUILDPACK_DIR=$(mktemp -d -t node.XXXXXX)
 	NODE_BUILD_DIR=$(mktemp -d -t node_build.XXXXXX)
@@ -68,39 +74,46 @@ if [ -n "${SPLIT_FILES}" ]; then
 		blessc "${BUILD_DIR}/${CSS_PATH}/$f" "${BUILD_DIR}/${CSS_PATH}/${NO_END}.split.css" | indent
 	done
 	echo "done." | indent
+
 fi
 
-# JavaScript Compilation
+if [ -n "${JS_PATH}" ]; then
 
-echo "-----> Installing Juicer..."
-if [ ! -d "$PWD/.gem" ]; then
-  mkdir $PWD/.gem
-fi
-gem install juicer --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
-export GEM_PATH=$GEM_PATH:$PWD/.gem
-echo "done." | indent
+	# JavaScript Compilation
 
-echo "-----> Installing YUI Compressor"
-$PWD/.gem/bin/juicer install yui_compressor | indent
-echo "done." | indent
-
-echo "-----> Installing JSLint"
-$PWD/.gem/bin/juicer install jslint | indent
-echo "done." | indent
-
-echo "-----> Merging JavaScript..."
-for f in $(find ${BUILD_DIR}/${JS_PATH} -type f -maxdepth 1 -name "*.js" ! -name "*.min.js"); do
-	$PWD/.gem/bin/juicer merge "$f" -f -s | indent
-done
-echo "done." | indent
-
-echo "-----> Looking for costom buildpack"
-if [ -f ${BUILD_DIR}/bin/buildpack.rb ]; then
-	echo "Running found buildpack" | indent
-	ruby ${BUILD_DIR}/bin/buildpack.rb
+	echo "-----> Installing Juicer..."
+	if [ ! -d "$PWD/.gem" ]; then
+	  mkdir $PWD/.gem
+	fi
+	gem install juicer --no-rdoc --no-ri --install-dir "$PWD/.gem" | indent
+	export GEM_PATH=$GEM_PATH:$PWD/.gem
 	echo "done." | indent
-else
-	echo "no custom buildpack found, done." | indent
+
+	echo "-----> Installing YUI Compressor"
+	$PWD/.gem/bin/juicer install yui_compressor | indent
+	echo "done." | indent
+
+	echo "-----> Installing JSLint"
+	$PWD/.gem/bin/juicer install jslint | indent
+	echo "done." | indent
+
+	echo "-----> Merging JavaScript..."
+	for f in $(find ${BUILD_DIR}/${JS_PATH} -type f -maxdepth 1 -name "*.js" ! -name "*.min.js"); do
+		$PWD/.gem/bin/juicer merge "$f" -f -s | indent
+	done
+	echo "done." | indent
+
+fi
+
+if [ -n ${BUILD_DIR} ]; then
+	echo "-----> Looking for costom buildpack"
+	if [ -f ${BUILD_DIR}/bin/buildpack.rb ]; then
+		echo "Running found buildpack" | indent
+		ruby ${BUILD_DIR}/bin/buildpack.rb
+		echo "done." | indent
+	else
+		echo "no custom buildpack found, done." | indent
+	fi
 fi
 
 # COMPILE APP
