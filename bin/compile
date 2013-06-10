@@ -27,7 +27,7 @@ LP_DIR=`cd $(dirname $0); cd ..; pwd`
 echo "       NOTICE: This deploy process depends on heroku lab feature making config vars availible during build."
 echo "       See: https://devcenter.heroku.com/articles/labs-user-env-compile"
 
-if [ -n ${SASS_PATH} ]; then
+if [ -n "${SASS_PATH}" ]; then
 
 	# CSS Compilation
 
@@ -41,7 +41,6 @@ if [ -n ${SASS_PATH} ]; then
 
 	if [ ! -f "${BUILD_DIR}/config.rb" ]; then
 		echo "-----> Compiling SASS..."
-		echo "From: ${BUILD_DIR}/${SASS_PATH} TO: ${BUILD_DIR}/${CSS_PATH}"
 		$PWD/.gem/bin/sass --update "${BUILD_DIR}/${SASS_PATH}":"${BUILD_DIR}/${CSS_PATH}" --style compressed | indent
 		echo "done." | indent
 	else
@@ -57,7 +56,7 @@ fi
 
 # Node Installation
 
-if [ -n ${SPLIT_FILES} ]; then
+if [ -n "${SPLIT_FILES}" ]; then
 
 	echo "-----> Onstalling Node"
 	NODE_BUILDPACK_DIR=$(mktemp -d -t node.XXXXXX)
@@ -78,7 +77,7 @@ if [ -n ${SPLIT_FILES} ]; then
 
 fi
 
-if [ -n ${JS_PATH} ]; then
+if [ -n "${JS_PATH}" ]; then
 
 	# JavaScript Compilation
 
