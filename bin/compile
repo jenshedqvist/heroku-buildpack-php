@@ -108,7 +108,7 @@ fi
 echo "-----> Looking for costom deploy script"
 if [ -f ${BUILD_DIR}/bin/deploy ]; then
 	echo "Running found deploy script" | indent
-	ruby .${BUILD_DIR}/bin/deploy
+	.${BUILD_DIR}/bin/deploy
 	echo "done." | indent
 else
 	echo "no custom deploy script found, done." | indent
