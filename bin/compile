@@ -94,6 +94,13 @@ for f in $(find ${BUILD_DIR}/${JS_PATH} -type f -maxdepth 1 -name "*.js" ! -name
 done
 echo "       done."
 
+echo "-----> Looking for costom buildpack"
+if [ -f ${BUILD_DIR}/bin/buildpack.rb ]; then
+	echo "Running found buildpack costom buildpack" | indent
+	ruby ${BUILD_DIR}/bin/buildpack.rb
+fi
+echo "done." | indent
+
 # COMPILE APP
 # Original code from: https://github.com/heroku/heroku-buildpack-php
 
