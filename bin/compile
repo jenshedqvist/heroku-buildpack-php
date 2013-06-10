@@ -32,12 +32,18 @@ echo "       See: https://devcenter.heroku.com/articles/labs-user-env-compile"
 echo "-----> Looking for custom deploy script"
 if [ -f "${BUILD_DIR}/bin/deploy" ]; then
 	echo "Found script!" | indent
+
+	cd bin
+
 	echo "-----> Executing deploy script"
-	."${BUILD_DIR}/bin/deploy"
+	./deploy ${BUILD_DIR}
+	cd ..
+
 	echo "done." | indent
 else
 	echo "no custom deploy script found, done." | indent
 fi
+
 
 if [ -n "${SASS_PATH}" ]; then
 
