@@ -105,15 +105,13 @@ if [ -n "${JS_PATH}" ]; then
 
 fi
 
-if [ -n "${BUILD_DIR}" ]; then
-	echo "-----> Looking for costom buildpack"
-	if [ -f ${BUILD_DIR}/bin/buildpack.rb ]; then
-		echo "Running found buildpack" | indent
-		ruby ${BUILD_DIR}/bin/buildpack.rb
-		echo "done." | indent
-	else
-		echo "no custom buildpack found, done." | indent
-	fi
+echo "-----> Looking for costom buildpack"
+if [ -f ${BUILD_DIR}/bin/buildpack.rb ]; then
+	echo "Running found buildpack" | indent
+	ruby ${BUILD_DIR}/bin/buildpack.rb
+	echo "done." | indent
+else
+	echo "no custom buildpack found, done." | indent
 fi
 
 # COMPILE APP
