@@ -58,7 +58,7 @@ fi
 
 if [ -n "${SPLIT_FILES}" ]; then
 
-	echo "-----> Onstalling Node"
+	echo "-----> Installing Node"
 	NODE_BUILDPACK_DIR=$(mktemp -d -t node.XXXXXX)
 	NODE_BUILD_DIR=$(mktemp -d -t node_build.XXXXXX)
 	git clone --quiet https://github.com/heroku/heroku-buildpack-nodejs.git $NODE_BUILDPACK_DIR
