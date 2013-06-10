@@ -33,11 +33,11 @@ echo "-----> Looking for custom deploy script"
 if [ -f "${BUILD_DIR}/bin/deploy" ]; then
 	echo "Found script!" | indent
 
-	cd bin
+	cd "${BUILD_DIR}/bin"
 
 	echo "-----> Executing deploy script"
 	./deploy ${BUILD_DIR}
-	cd ..
+	cd "${BUILD_DIR}"
 
 	echo "done." | indent
 else
