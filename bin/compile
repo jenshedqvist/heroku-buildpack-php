@@ -29,6 +29,12 @@ shopt -s dotglob
 
 cd $BUILD_DIR
 
+# Set up .htaccess
+echo "-----> Configuring htaccess"
+echo "Putting .htaccess in project root" | indent
+cp proto/htaccess.txt ".htaccess"
+echo "done." | indent
+
 # move app things to www
 mkdir -p $CACHE_DIR/www
 mv * $CACHE_DIR/www
