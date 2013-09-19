@@ -32,7 +32,7 @@ cd $BUILD_DIR
 # Set up .htaccess
 echo "-----> Configuring htaccess"
 echo "Putting .htaccess in project root" | indent
-cp proto/htaccess.txt ".htaccess"
+cp proto/bin/htaccess.txt ".htaccess"
 echo "done." | indent
 
 # move app things to www
